@@ -78,10 +78,18 @@ async function getModulesDefinitions(
     .filter((file) => file.endsWith('.js'))
     .map((file) => {
       const identifier = file.split('.').shift()
-      const route = parseRoute(file)
-      const modulePath = path.join(modulesPath, file)
-      const module = doRequire ? require(modulePath) : modulePath
+      const route = parseRoute(file) // 模块路由
+      const modulePath = path.join(modulesPath, file) // 模块路径
+      const module = doRequire ? require(modulePath) : modulePath // 模块内容
 
+      /**
+       * eg:
+       * {
+       *  identifier: 'album_detail',
+       *  route: '/album/detail',
+       *  module: () => {模块内容}
+       * }
+       */
       return { identifier, route, module }
     })
 
@@ -196,12 +204,15 @@ async function consturctServer(moduleDefs) {
   }
 
   /**
-   * Load every modules in this directory
+   * 模块加载，加载 module下的内容
    */
   const moduleDefinitions =
     moduleDefs ||
     (await getModulesDefinitions(path.join(__dirname, 'module'), special))
 
+  /**
+   * 注册路由
+   */
   for (const moduleDef of moduleDefinitions) {
     // Register the route.
     app.use(moduleDef.route, async (req, res) => {
@@ -236,6 +247,7 @@ async function consturctServer(moduleDefs) {
             ...obj[3],
             ip,
           }
+          // 执行请求
           return request(...obj)
         })
         console.log('[OK]', decode(req.originalUrl))
@@ -293,6 +305,7 @@ async function serveNcmApi(options) {
   const port = Number(options.port || process.env.PORT || '3000')
   const host = options.host || process.env.HOST || ''
 
+  // 检查版本
   const checkVersionSubmission =
     options.checkVersion &&
     checkVersion().then(({ npmVersion, ourVersion, status }) => {
@@ -302,6 +315,7 @@ async function serveNcmApi(options) {
         )
       }
     })
+  // 创建应用的关键在 consturctServer() 函数中，它会返回一个 Promise，
   const constructServerSubmission = consturctServer(options.moduleDefs)
 
   const [_, app] = await Promise.all([
