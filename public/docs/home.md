@@ -80,7 +80,7 @@
 62. 电台 - 详情
 63. 电台 - 节目
 64. 给评论点赞
-65. 获取动态
+65. 获取动态列表
 66. 热搜列表(简略)
 67. 发送私信
 68. 发送私信歌单
@@ -89,7 +89,7 @@
 71. 歌单分类
 72. 收藏的歌手列表
 73. 订阅的电台列表
-74. 相关歌单推荐
+74. 相关歌单
 75. 付费精选接口
 76. 音乐是否可用检查接口
 77. 登录状态
@@ -307,6 +307,24 @@
 289. 歌曲是否喜爱
 290. 用户是否互相关注
 291. 歌曲动态封面
+292. 用户徽章
+293. 用户状态
+294. 用户状态 - 支持设置的状态
+295. 用户状态 - 相同状态的用户
+296. 用户状态 - 编辑
+297. 听歌足迹 - 年度听歌足迹
+298. 听歌足迹 - 今日收听
+299. 听歌足迹 - 总收听时长
+300. 听歌足迹 - 本周/本月收听时长
+301. 听歌足迹 - 周/月/年收听报告
+302. 歌单导入 - 元数据/文字/链接导入
+303. 歌单导入 - 任务状态
+304. 副歌时间
+305. 相关歌单推荐
+306. 歌词摘录 - 歌词摘录信息
+307. 歌词摘录 - 我的歌词本
+308. 歌词摘录 - 添加/修改摘录歌词
+309. 歌词摘录 - 删除摘录歌词
 
 ## 安装
 
@@ -1213,7 +1231,7 @@ tags: 歌单标签
 
 **调用例子 :** `/playmode/intelligence/list?id=33894312&pid=24381616` , `/playmode/intelligence/list?id=33894312&pid=24381616&sid=36871368`
 
-### 获取动态消息
+### 获取动态列表
 
 说明 : 调用此接口 , 可获取各种动态 , 对应网页版网易云，朋友界面里的各种动态消息
 ，如分享的视频，音乐，照片等！
@@ -1429,15 +1447,17 @@ tags: 歌单标签
 
 **调用例子 :** `/top/playlist/highquality?before=1503639064232&limit=3`
 
-### 相关歌单推荐
+### 相关歌单
 
-说明 : 调用此接口,传入歌单 id 可获取相关歌单(对应页面 [https://music.163.com/#/playlist?id=1](https://music.163.com/#/playlist?id=1))
+说明: 请替换为[相关歌单推荐](#相关歌单推荐)接口; 本接口通过html抓取内容, 现已无法抓取歌单
 
-**必选参数 :** `id` : 歌单 id
+~~说明 : 调用此接口,传入歌单 id 可获取相关歌单(对应页面 [https://music.163.com/#/playlist?id=1](https://music.163.com/#/playlist?id=1))~~
 
-**接口地址 :** `/related/playlist`
+~~**必选参数 :** `id` : 歌单 id~~
 
-**调用例子 :** `/related/playlist?id=1`
+~~**接口地址 :** `/related/playlist`~~
+
+~~**调用例子 :** `/related/playlist?id=1`~~
 
 ### 获取歌单详情
 
@@ -4563,7 +4583,7 @@ qrCodeStatus:20,detailReason:0  验证成功qrCodeStatus:21,detailReason:0 二�
 **调用例子:** `/ugc/user/devote`
 
 ### 年度听歌报告
-说明: 登录后调用此接口,使用此接口,可获取当前登录用户年度听歌报告，目前支持2017-2023年的报告
+说明: 登录后调用此接口,使用此接口,可获取当前登录用户年度听歌报告，目前支持2017-2024年的报告
 
 **必选参数：**  
 
@@ -4571,7 +4591,7 @@ qrCodeStatus:20,detailReason:0  验证成功qrCodeStatus:21,detailReason:0 二�
 
 **接口地址:** `/summary/annual`
 
-**调用例子:** `/summary/annual?year=2023`
+**调用例子:** `/summary/annual?year=2024`
 
 ### 本地歌曲文件匹配网易云歌曲信息
 
@@ -4601,9 +4621,9 @@ qrCodeStatus:20,detailReason:0  验证成功qrCodeStatus:21,detailReason:0 二�
 
 `id`: 歌曲id
 
-**接口地址:** `song/music/detail`
+**接口地址:** `/song/music/detail`
 
-**调用例子:** `song/music/detail?id=2082700997`
+**调用例子:** `/song/music/detail?id=2082700997`
 
 返回字段说明 :
 ```
@@ -4806,7 +4826,7 @@ bitrate = Math.floor(br / 1000)
 
 ### 歌曲动态封面
 
-说明 : 调用此接口, 传入歌曲id, 获取歌曲动态封面
+说明 : 登录后调用此接口, 传入歌曲id, 获取歌曲动态封面
 
 **必选参数 :**  
 
@@ -4815,6 +4835,256 @@ bitrate = Math.floor(br / 1000)
 **接口地址 :** `/song/dynamic/cover`
 
 **调用例子 :** `/song/dynamic/cover?id=2101179024`
+
+### 用户徽章
+
+说明 : 调用此接口, 传入用户id, 获取用户徽章
+
+**必选参数 :**  
+
+`uid`: 用户 id
+
+**接口地址 :** `/user/medal`
+
+**调用例子 :** `/user/medal?uid=32953014`
+
+### 用户状态
+
+说明 : 登录后调用此接口, 传入用户id, 获取用户状态
+
+**必选参数 :**  
+
+`uid`: 用户 id
+
+**接口地址 :** `/user/social/status`
+
+**调用例子 :** `/user/social/status?uid=32953014`
+
+### 用户状态 - 支持设置的状态
+
+说明 : 登录后调用此接口, 获取支持设置的状态
+
+**接口地址 :** `/user/social/status/support`
+
+### 用户状态 - 相同状态的用户
+
+说明 : 登录后调用此接口, 获取相同状态的用户
+
+**接口地址 :** `/user/social/status/rcmd`
+
+### 用户状态 - 编辑
+
+说明 : 登录后调用此接口, 编辑当前用户状态， 所需参数可在接口`/user/social/status/support`获取
+
+**接口地址 :** `/user/social/status/edit`
+
+### 听歌足迹 - 年度听歌足迹
+
+说明 : 登录后调用此接口, 获取年度听歌足迹
+
+**接口地址 :** `/listen/data/year/report`
+
+### 听歌足迹 - 今日收听
+
+说明 : 登录后调用此接口, 获取今日收听
+
+**接口地址 :** `/listen/data/today/song`
+
+### 听歌足迹 - 总收听时长
+
+说明 : 登录后调用此接口, 获取总收听时长; 相关接口可能需要vip权限
+
+**接口地址 :** `/listen/data/total`
+
+### 听歌足迹 - 本周/本月收听时长
+
+说明 : 登录后调用此接口, 获取本周/本月收听时长
+
+**必选参数 :**  
+
+`type`: 维度类型 周 week 月 month; 今年没结束，不支持今年的数据
+
+**接口地址 :** `/listen/data/realtime/report`
+
+**调用例子 :** `/listen/data/realtime/report?type=month`
+
+### 听歌足迹 - 周/月/年收听报告
+
+说明 : 登录后调用此接口, 获取周/月/年收听报告
+
+**必选参数 :**  
+
+`type`: 维度类型 周 week 月 month 年 year
+
+**可选参数 :**
+
+`endTime` : 周: 每周周六0点的时间戳 月: 每月最后一天0点的时间戳 年: 每年最后一天0点的时间戳
+不填就是本周/月的, 今年没结束，则没有今年的数据
+
+**接口地址 :** `/listen/data/report`
+
+**调用例子 :** `/listen/data/report?type=month`
+
+### 歌单导入 - 元数据/文字/链接导入
+
+说明 : 登录后调用此接口, 支持通过元数据/文字/链接三种方式生成歌单; 三种方式不可同时调用
+
+**接口地址 :** `/playlist/import/name/task/create`
+
+**可选参数 :**
+
+`importStarPlaylist` : 是否导入`我喜欢的音乐`, 此项为true则不生成新的歌单
+`playlistName` : 生成的歌单名, 仅文字导入和链接导入支持, 默认为```'导入音乐 '.concat(new Date().toLocaleString())```
+
+**元数据导入 :**  
+
+`local`: json类型的字符串, 如：
+```javascript
+let local = encodeURIComponent(
+  JSON.stringify([
+    {
+      name: 'アイニーブルー', // 歌曲名称
+      artist: 'ZLMS',        // 艺术家名称
+      album: 'アイニーブルー',// 专辑名称
+    },
+    {
+      name: 'ファンタズマ',
+      artist: 'sasakure.UK',
+      album: '未来イヴ',
+    },
+  ]),
+)
+```
+
+**调用例子 :** `/playlist/import/name/task/create?local=${local}`
+
+**文字导入 :**  
+
+`text`: 导入的文字, 如：
+```javascript
+let text = encodeURIComponent(`アイニーブルー ZLMS
+ファンタズマ sasakure.UK`)
+```
+
+**调用例子 :** `/playlist/import/name/task/create?text=${text}`
+
+**链接导入 :**  
+
+`link`: 存有歌单链接的数组类型的字符串, 如：
+```javascript
+let link = encodeURIComponent(
+  JSON.stringify([
+    'https://i.y.qq.com/n2/m/share/details/taoge.html?id=7716341988&hosteuin=',
+    'https://i.y.qq.com/n2/m/share/details/taoge.html?id=8010042041&hosteuin=',
+  ]),
+)
+```
+歌单链接来源:
+1. 将歌单分享到微信/微博/QQ后复制链接
+2. 直接复制歌单/个人主页链接
+3. 直接复制文章链接
+
+**调用例子 :** `/playlist/import/name/task/create?link=${link}`
+
+### 歌单导入 - 任务状态
+
+说明: 调用此接口, 传入导入歌单任务id, 获取任务状态
+
+**必选参数：**     
+
+`id`: 任务id
+
+**接口地址:** `/playlist/import/task/status`
+
+**调用例子:** `/playlist/import/task/status?id=123834369`
+
+### 副歌时间
+
+说明: 调用此接口, 传入歌曲id, 获取副歌时间
+
+**必选参数：**     
+
+`id`: 歌曲id
+
+**接口地址:** `/song/chorus`
+
+**调用例子:** `/song/chorus?id=2058263032`
+
+### 相关歌单推荐
+
+说明: 调用此接口, 传入歌单id, 获取相关歌单推荐
+
+**必选参数：**     
+
+`id`: 歌单id
+
+**接口地址:** `/playlist/detail/rcmd/get`
+
+**调用例子:** `/playlist/detail/rcmd/get?id=8039587836`
+
+### 歌词摘录 - 歌词摘录信息
+
+说明: 登录后调用此接口, 传入歌曲id, 获取歌词摘录信息
+
+**必选参数：**
+
+`id`: 歌曲id
+
+**接口地址:** `/song/lyrics/mark`
+
+**调用例子:** `/song/lyrics/mark?id=2058263032`
+
+### 歌词摘录 - 我的歌词本
+
+说明: 登录后调用此接口, 获取我的歌词本
+
+**可选参数 :**
+
+`limit` : 返回数量 , 默认为 20
+
+`offset` : 偏移数量，用于分页 ,如 :( 页数 -1)\*30, 其中 30 为 limit 的值 , 默认为 0
+
+**接口地址:** `/song/lyrics/mark/user/page`
+
+**调用例子:** `/song/lyrics/mark/user/page`
+
+### 歌词摘录 - 添加/修改摘录歌词
+
+说明: 登录后调用此接口, 传入歌曲id, 可以添加/修改摘录歌词
+
+**必选参数：**
+
+`id`: 歌曲id
+
+`data`: 存储歌词摘录信息的对象数组的字符串，如: 
+```javascript
+let data = encodeURIComponent(
+  JSON.stringify([
+  {
+    "translateType": 1,
+    "startTimeStamp": 800,
+    "translateLyricsText": "让我逃走吧、声音已经枯萎",
+    "originalLyricsText": "逃がし てくれって声を枯らした"
+  }
+]),
+)
+```
+
+若需要修改摘录信息, 则需要填入参数```markId```, 修改对应的摘录信息
+
+**接口地址:** `/song/lyrics/mark/add`
+
+### 歌词摘录 - 删除摘录歌词
+
+说明: 登录后调用此接口, 传入摘录歌词id, 删除摘录歌词
+
+**必选参数：**
+
+`id`: 摘录歌词id
+
+**接口地址:** `/song/lyrics/mark/del`
+
+**调用例子:** `/song/lyrics/mark?id=2083850`
 
 ## 离线访问此文档
 

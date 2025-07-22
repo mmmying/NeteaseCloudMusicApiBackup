@@ -1,4 +1,11 @@
 # 更新日志
+### 4.25.0 | 2024.11.16
+- feat: 增加副歌时间、相关歌单推荐接口，原有相关歌单接口已废弃；fix: 将部分易盾白名单接口替换为eapi [#30](https://gitlab.com/Binaryify/neteasecloudmusicapi/-/merge_requests/30)
+- fix: 播客上传接口 [#32](https://gitlab.com/Binaryify/neteasecloudmusicapi/-/merge_requests/32)
+
+### 4.24.0 | 2024.10.20
+- 新增用户徽章，用户状态，听歌足迹，今日收听，歌单导入等接口 [#29](https://gitlab.com/Binaryify/neteasecloudmusicapi/-/merge_requests/29)
+ 
 ### 4.23.3 | 2024.10.15
 - 更正iPhone请求的cookie [#28](https://gitlab.com/Binaryify/neteasecloudmusicapi/-/merge_requests/28)
 
@@ -978,7 +985,7 @@
 
 - 新增 云盘歌曲删除, 热门话题, 电台 - 推荐类型, 电台 - 非热门类型, 电台 - 今日优选, 心动模式/智能播放等接口
 
-- 更新文档:banner 接口 增加 `type` 参数; 获取动态消息接口增加 `pagesize` 和 `lasttime` 参数; 电台 - 付费精选接口修改默认`limit`为 30
+- 更新文档:banner 接口 增加 `type` 参数; 获取动态列表接口增加 `pagesize` 和 `lasttime` 参数; 电台 - 付费精选接口修改默认`limit`为 30
 
 ### 3.8.1 | 2019.04.24
 
