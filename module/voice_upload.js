@@ -1,6 +1,7 @@
 const { default: axios } = require('axios')
 var xml2js = require('xml2js')
 
+const createOption = require('../util/option.js')
 var parser = new xml2js.Parser(/* options */)
 function createDupkey() {
   // 格式:3b443c7c-a87f-468d-ba38-46d407aaf23a
@@ -25,8 +26,7 @@ module.exports = async (query, request) => {
       .replace('.' + ext, '')
       .replace(/\s/g, '')
       .replace(/\./g, '_')
-  // query.cookie.os = 'pc'
-  // query.cookie.appver = '2.9.7'
+
   if (!query.songFile) {
     return Promise.reject({
       status: 500,
@@ -38,8 +38,7 @@ module.exports = async (query, request) => {
   }
 
   const tokenRes = await request(
-    'POST',
-    `https://music.163.com/weapi/nos/token/alloc`,
+    `/api/nos/token/alloc`,
     {
       bucket: 'ymusic',
       ext: ext,
@@ -48,7 +47,7 @@ module.exports = async (query, request) => {
       nos_product: 0,
       type: 'other',
     },
-    { crypto: 'weapi', cookie: query.cookie, proxy: query.proxy },
+    createOption(query, 'weapi'),
   )
 
   const objectKey = tokenRes.body.result.objectKey.replace('/', '%2F')
@@ -65,18 +64,42 @@ module.exports = async (query, request) => {
   // return xml
   const res2 = await parser.parseStringPromise(res.data)
 
-  const res3 = await axios({
-    method: 'put',
-    url: `https://ymusic.nos-hz.163yun.com/${objectKey}?partNumber=1&uploadId=${res2.InitiateMultipartUploadResult.UploadId[0]}`,
-    headers: {
-      'x-nos-token': tokenRes.body.result.token,
-      'Content-Type': 'audio/mpeg',
-    },
-    data: query.songFile.data,
-  })
+  const fileSize = query.songFile.data.length
+  const blockSize = 10 * 1024 * 1024 // 10MB
+  let offset = 0
+  let blockIndex = 1
 
-  // get etag
-  const etag = res3.headers.etag
+  let etags = []
+
+  while (offset < fileSize) {
+    const chunk = query.songFile.data.slice(
+      offset,
+      Math.min(offset + blockSize, fileSize),
+    )
+
+    const res3 = await axios({
+      method: 'put',
+      url: `https://ymusic.nos-hz.163yun.com/${objectKey}?partNumber=${blockIndex}&uploadId=${res2.InitiateMultipartUploadResult.UploadId[0]}`,
+      headers: {
+        'x-nos-token': tokenRes.body.result.token,
+        'Content-Type': 'audio/mpeg',
+      },
+      data: chunk,
+    })
+    // get etag
+    const etag = res3.headers.etag
+    etags.push(etag)
+    offset += blockSize
+    blockIndex++
+  }
+
+  let completeStr = '<CompleteMultipartUpload>'
+  for (let i = 0; i < etags.length; i++) {
+    completeStr += `<Part><PartNumber>${i + 1}</PartNumber><ETag>${
+      etags[i]
+    }</ETag></Part>`
+  }
+  completeStr += '</CompleteMultipartUpload>'
 
   // 文件处理
   await axios({
@@ -87,15 +110,12 @@ module.exports = async (query, request) => {
       'X-Nos-Meta-Content-Type': 'audio/mpeg',
       'x-nos-token': tokenRes.body.result.token,
     },
-    data: `<CompleteMultipartUpload>
-     <Part><PartNumber>1</PartNumber><ETag>${etag}</ETag></Part>
-     </CompleteMultipartUpload>`,
+    data: completeStr,
   })
 
   // preCheck
   await request(
-    'post',
-    `https://interface.music.163.com/weapi/voice/workbench/voice/batch/upload/preCheck`,
+    `/api/voice/workbench/voice/batch/upload/preCheck`,
     {
       dupkey: createDupkey(),
       voiceData: JSON.stringify([
@@ -119,17 +139,14 @@ module.exports = async (query, request) => {
       ]),
     },
     {
-      crypto: 'weapi',
-      cookie: query.cookie,
-      proxy: query.proxy,
+      ...createOption(query),
       headers: {
         'x-nos-token': tokenRes.body.result.token,
       },
     },
   )
   const result = await request(
-    'post',
-    `https://interface.music.163.com/weapi/voice/workbench/voice/batch/upload/v2`,
+    `/api/voice/workbench/voice/batch/upload/v2`,
     {
       dupkey: createDupkey(),
       voiceData: JSON.stringify([
@@ -153,9 +170,7 @@ module.exports = async (query, request) => {
       ]),
     },
     {
-      crypto: 'weapi',
-      cookie: query.cookie,
-      proxy: query.proxy,
+      ...createOption(query),
       headers: {
         'x-nos-token': tokenRes.body.result.token,
       },

@@ -1,5 +1,6 @@
 // 推荐节目
 
+const createOption = require('../util/option.js')
 module.exports = (query, request) => {
   const data = {
     cateId: query.type,
@@ -7,14 +8,8 @@ module.exports = (query, request) => {
     offset: query.offset || 0,
   }
   return request(
-    'POST',
-    `https://music.163.com/weapi/program/recommend/v1`,
+    `/api/program/recommend/v1`,
     data,
-    {
-      crypto: 'weapi',
-      cookie: query.cookie,
-      proxy: query.proxy,
-      realIP: query.realIP,
-    },
+    createOption(query, 'weapi'),
   )
 }

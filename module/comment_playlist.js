@@ -1,7 +1,7 @@
 // 歌单评论
 
+const createOption = require('../util/option.js')
 module.exports = (query, request) => {
-  query.cookie.os = 'pc'
   const data = {
     rid: query.id,
     limit: query.limit || 20,
@@ -9,14 +9,8 @@ module.exports = (query, request) => {
     beforeTime: query.before || 0,
   }
   return request(
-    'POST',
-    `https://music.163.com/weapi/v1/resource/comments/A_PL_0_${query.id}`,
+    `/api/v1/resource/comments/A_PL_0_${query.id}`,
     data,
-    {
-      crypto: 'weapi',
-      cookie: query.cookie,
-      proxy: query.proxy,
-      realIP: query.realIP,
-    },
+    createOption(query, 'weapi'),
   )
 }

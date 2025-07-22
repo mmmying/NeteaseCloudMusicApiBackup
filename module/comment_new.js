@@ -1,8 +1,8 @@
 const { resourceTypeMap } = require('../util/config.json')
 // 评论
 
+const createOption = require('../util/option.js')
 module.exports = (query, request) => {
-  query.cookie.os = 'pc'
   query.type = resourceTypeMap[query.type]
   const threadId = query.type + query.id
   const pageSize = query.pageSize || 20
@@ -33,16 +33,5 @@ module.exports = (query, request) => {
     cursor: cursor,
     sortType: sortType, //99:按推荐排序,2:按热度排序,3:按时间排序
   }
-  return request(
-    'POST',
-    `https://music.163.com/api/v2/resource/comments`,
-    data,
-    {
-      crypto: 'eapi',
-      cookie: query.cookie,
-      proxy: query.proxy,
-      realIP: query.realIP,
-      url: '/api/v2/resource/comments',
-    },
-  )
+  return request(`/api/v2/resource/comments`, data, createOption(query))
 }

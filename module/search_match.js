@@ -1,5 +1,6 @@
 // 本地歌曲匹配音乐信息
 
+const createOption = require('../util/option.js')
 module.exports = (query, request) => {
   let songs = [
     {
@@ -13,16 +14,5 @@ module.exports = (query, request) => {
   const data = {
     songs: JSON.stringify(songs),
   }
-  return request(
-    'POST',
-    `https://interface3.music.163.com/eapi/search/match/new`,
-    data,
-    {
-      crypto: 'eapi',
-      cookie: query.cookie,
-      proxy: query.proxy,
-      url: '/api/search/match/new',
-      realIP: query.realIP,
-    },
-  )
+  return request(`/api/search/match/new`, data, createOption(query))
 }

@@ -1,18 +1,13 @@
 const uploadPlugin = require('../plugins/upload')
+const createOption = require('../util/option.js')
 module.exports = async (query, request) => {
   const uploadInfo = await uploadPlugin(query, request)
   const res = await request(
-    'POST',
-    `https://music.163.com/weapi/user/avatar/upload/v1`,
+    `/api/user/avatar/upload/v1`,
     {
       imgid: uploadInfo.imgId,
     },
-    {
-      crypto: 'weapi',
-      cookie: query.cookie,
-      proxy: query.proxy,
-      realIP: query.realIP,
-    },
+    createOption(query),
   )
   return {
     status: 200,
